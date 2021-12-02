@@ -1,3 +1,6 @@
+[![Build](https://github.com/Haraj-backend/zatca-sdk-go/actions/workflows/build.yml/badge.svg)](https://github.com/Haraj-backend/zatca-sdk-go/actions/workflows/build.yml)
+[![Test](https://github.com/Haraj-backend/zatca-sdk-go/actions/workflows/test.yml/badge.svg)](https://github.com/Haraj-backend/zatca-sdk-go/actions/workflows/test.yml)
+
 # Zatca SDK GO
 
 An unofficial package in Golang to help developers to implement ZATCA (Fatoora) QR code easily which required for e-invoicing
