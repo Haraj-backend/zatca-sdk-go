@@ -31,19 +31,18 @@ func main() {
 		log.Fatalf("unable to initialize new qrcode due: %v", err)
 	}
 
-    // encode TLV to get hash data
+	// encode TLV to get hash data
 	hash, err := qrCode.EncodeTLV()
 	if err != nil {
 		log.Fatalf("unable to encode TLV due: %v", err)
-	}    
-    fmt.Println("hash data:", hash)
+	}
+	fmt.Println("hash data:", hash)
 
-    // decode TLV to get QR Code data
-    qrCodeResult, err := qrcode.DecodeTLV("AR3Yp9mE2KzZiNin2YfYsdmKINin2YTYudix2KjZigIPMzEwMTIyMzkzNTAwMDAzAxQyMDIyLTA0LTI1VDE1OjMwOjAwWgQHMTAwMC4wMAUGMTUwLjAw")
+	// decode TLV to get QR Code data
+	qrCodeResult, err := qrcode.DecodeTLV("AR3Yp9mE2KzZiNin2YfYsdmKINin2YTYudix2KjZigIPMzEwMTIyMzkzNTAwMDAzAxQyMDIyLTA0LTI1VDE1OjMwOjAwWgQHMTAwMC4wMAUGMTUwLjAw")
 	if err != nil {
 		log.Fatalf("unable to decode TLV due: %v", err)
 	}
 	fmt.Println("decoded hash:", qrCodeResult)
 }
-
 ```
