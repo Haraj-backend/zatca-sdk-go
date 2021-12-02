@@ -5,6 +5,7 @@
 
 An unofficial package in Golang to help developers to implement ZATCA (Fatoora) QR code easily which required for e-invoicing
 
+> ✅ The hash result has been validated the same as the output from ZATCA's SDK as of 18th November 2021
 # Installation
 
 ```
@@ -26,7 +27,7 @@ func main() {
 	qrCode, err := qrcode.NewQRCode(qrcode.QRCodeData{
 		SellerName:   "Bobs Records",
 		SellerTRN:    "310122393500003",
-		Timestamp:    time.Now(),
+		Timestamp:    time.Date(2022, 04, 25, 15, 30, 00, 00, time.UTC),
 		InvoiceTotal: 1000,
 		TotalVAT:     150,
 	})
