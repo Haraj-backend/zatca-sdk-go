@@ -1,0 +1,6 @@
+github.com/Haraj-backend/zatca-sdk-go v0.0.0-20211202071118-b3ec4cfc3c60 h1:bXw3hJ1VdXFuTKixsFA0Dmruye5P4l4N8ixOR/AAJ0k=
+github.com/Haraj-backend/zatca-sdk-go v0.0.0-20211202071118-b3ec4cfc3c60/go.mod h1:Pwl7G1DblSnj27OT7dMMuV20HegghOqdznkq8PoQLms=
+github.com/Haraj-backend/zatca-sdk-go v0.0.0-20211202074435-18341e584c9c h1:VxrAZ7sHbprf2tNa5uZqAXSuCXZfQLBCKK19OH5z8nk=
+github.com/Haraj-backend/zatca-sdk-go v0.0.0-20211202074435-18341e584c9c/go.mod h1:Pwl7G1DblSnj27OT7dMMuV20HegghOqdznkq8PoQLms=
+github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e h1:MRM5ITcdelLK2j1vwZ3Je0FKVCfqOLp5zO6trqMLYs0=
+github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e/go.mod h1:XV66xRDqSt+GTGFMVlhk3ULuV0y9ZmzeVGR4mloJI3M=
