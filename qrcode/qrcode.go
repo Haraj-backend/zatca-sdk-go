@@ -3,6 +3,7 @@ package qrcode
 import (
 	"encoding/base64"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -23,7 +24,7 @@ type QRCodeData struct {
 	TotalVAT     float64
 }
 
-func (i QRCodeData) ValidateInput() error {
+func (i QRCodeData) validate() error {
 	if len(i.SellerName) == 0 {
 		return fmt.Errorf("missing `SellerName`")
 	}
@@ -56,25 +57,25 @@ func (i QRCodeData) ValidateInput() error {
 
 // SetValue to set qrcode value based on index number
 // it follows Zatca QR Code specification
-func (i *QRCodeData) SetValue(idx int, val string) error {
+func (d *QRCodeData) SetValue(idx int, val string) error {
 	var err error
 	switch idx {
 	case 1:
-		i.SellerName = val
+		d.SellerName = val
 	case 2:
-		i.SellerTRN = val
+		d.SellerTRN = val
 	case 3:
-		i.Timestamp, err = time.Parse(time.RFC3339, val)
+		d.Timestamp, err = time.Parse(time.RFC3339, val)
 		if err != nil {
 			return fmt.Errorf("timestamp format shoud be in RFC3339")
 		}
 	case 4:
-		i.InvoiceTotal, err = strconv.ParseFloat(val, 64)
+		d.InvoiceTotal, err = strconv.ParseFloat(val, 64)
 		if err != nil {
 			return fmt.Errorf("invoice total format shoud be float number")
 		}
 	case 5:
-		i.TotalVAT, err = strconv.ParseFloat(val, 64)
+		d.TotalVAT, err = strconv.ParseFloat(val, 64)
 		if err != nil {
 			return fmt.Errorf("total VAT format shoud be float number")
 		}
@@ -82,8 +83,13 @@ func (i *QRCodeData) SetValue(idx int, val string) error {
 	return nil
 }
 
+func (d QRCodeData) String() string {
+	out, _ := json.Marshal(d)
+	return string(out)
+}
+
 func NewQRCode(input QRCodeData) (QRCode, error) {
-	err := input.ValidateInput()
+	err := input.validate()
 	if err != nil {
 		return nil, err
 	}
