@@ -10,8 +10,12 @@ import (
 	"time"
 )
 
+// maxValueLength define the maximum length for the field value inside Data
+// since the length could only be 1 byte, that means the maximum length for
+// every field values is 255.
 const maxValueLength = 255
 
+// Data represents decoded data inside QRCode
 type Data struct {
 	SellerName   string
 	SellerTRN    string
@@ -20,6 +24,7 @@ type Data struct {
 	TotalVAT     float64
 }
 
+// Validate is used for validating Data
 func (i Data) Validate() error {
 	if len(i.SellerName) == 0 {
 		return fmt.Errorf("missing `SellerName`")
@@ -51,11 +56,14 @@ func (i Data) Validate() error {
 	return nil
 }
 
+// String returns string representation of Data
 func (d Data) String() string {
 	out, _ := json.Marshal(d)
 	return string(out)
 }
 
+// EncodeTLV return base64 hash value for given Data. Internally this function will
+// call `Data.Validate()` for validating the input data.
 func EncodeTLV(d Data) (string, error) {
 	// validate data
 	err := d.Validate()
@@ -64,11 +72,11 @@ func EncodeTLV(d Data) (string, error) {
 	}
 	// construct hash
 	builder := &strings.Builder{}
-	builder.WriteString(constructTLV(1, d.SellerName))
-	builder.WriteString(constructTLV(2, d.SellerTRN))
-	builder.WriteString(constructTLV(3, formatTime(d.Timestamp)))
-	builder.WriteString(constructTLV(4, formatFloat(d.InvoiceTotal)))
-	builder.WriteString(constructTLV(5, formatFloat(d.TotalVAT)))
+	builder.WriteString(encodeValue(1, d.SellerName))
+	builder.WriteString(encodeValue(2, d.SellerTRN))
+	builder.WriteString(encodeValue(3, formatTime(d.Timestamp)))
+	builder.WriteString(encodeValue(4, formatFloat(d.InvoiceTotal)))
+	builder.WriteString(encodeValue(5, formatFloat(d.TotalVAT)))
 
 	b, err := hex.DecodeString(builder.String())
 	if err != nil {
@@ -78,6 +86,7 @@ func EncodeTLV(d Data) (string, error) {
 	return base64.StdEncoding.EncodeToString(b), nil
 }
 
+// DecodeTLV returns Data for given base64 hash string.
 func DecodeTLV(hash string) (*Data, error) {
 	bytesData, err := base64.StdEncoding.DecodeString(hash)
 	if err != nil {
@@ -95,7 +104,7 @@ func DecodeTLV(hash string) (*Data, error) {
 		// convert the bytes to string
 		val := string(bytesData[2 : 2+length])
 
-		err = data.decodeValue(idx, val)
+		err = decodeValue(idx, val, &data)
 		if err != nil {
 			return nil, fmt.Errorf("unable to set value for idx: %d val: %s due: %v", idx, val, err)
 		}
@@ -106,7 +115,7 @@ func DecodeTLV(hash string) (*Data, error) {
 	return &data, nil
 }
 
-func (d *Data) decodeValue(idx int, val string) error {
+func decodeValue(idx int, val string, d *Data) error {
 	var err error
 	switch idx {
 	case 1:
@@ -132,7 +141,7 @@ func (d *Data) decodeValue(idx int, val string) error {
 	return nil
 }
 
-func constructTLV(idx int, val string) string {
+func encodeValue(idx int, val string) string {
 	builder := &strings.Builder{}
 	rns := []byte(val)
 	for i := 0; i < len(rns); i++ {
