@@ -1,12 +1,11 @@
 package qrcode
 
 import (
+	"bytes"
 	"encoding/base64"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -71,19 +70,14 @@ func EncodeTLV(d Data) (string, error) {
 		return "", err
 	}
 	// construct hash
-	builder := &strings.Builder{}
-	builder.WriteString(encodeValue(1, d.SellerName))
-	builder.WriteString(encodeValue(2, d.SellerTRN))
-	builder.WriteString(encodeValue(3, formatTime(d.Timestamp)))
-	builder.WriteString(encodeValue(4, formatFloat(d.InvoiceTotal)))
-	builder.WriteString(encodeValue(5, formatFloat(d.TotalVAT)))
+	buf := new(bytes.Buffer)
+	buf.Write(encodeValue(1, d.SellerName))
+	buf.Write(encodeValue(2, d.SellerTRN))
+	buf.Write(encodeValue(3, formatTime(d.Timestamp)))
+	buf.Write(encodeValue(4, formatFloat(d.InvoiceTotal)))
+	buf.Write(encodeValue(5, formatFloat(d.TotalVAT)))
 
-	b, err := hex.DecodeString(builder.String())
-	if err != nil {
-		return "", fmt.Errorf("unable to decode hex string due: %v", err)
-	}
-
-	return base64.StdEncoding.EncodeToString(b), nil
+	return base64.StdEncoding.EncodeToString(buf.Bytes()), nil
 }
 
 // DecodeTLV returns Data for given base64 hash string.
@@ -104,7 +98,7 @@ func DecodeTLV(hash string) (*Data, error) {
 		// convert the bytes to string
 		val := string(bytesData[2 : 2+length])
 
-		err = decodeValue(idx, val, &data)
+		err = setValue(idx, val, &data)
 		if err != nil {
 			return nil, fmt.Errorf("unable to set value for idx: %d val: %s due: %v", idx, val, err)
 		}
@@ -115,7 +109,7 @@ func DecodeTLV(hash string) (*Data, error) {
 	return &data, nil
 }
 
-func decodeValue(idx int, val string, d *Data) error {
+func setValue(idx int, val string, d *Data) error {
 	var err error
 	switch idx {
 	case 1:
@@ -141,13 +135,13 @@ func decodeValue(idx int, val string, d *Data) error {
 	return nil
 }
 
-func encodeValue(idx int, val string) string {
-	builder := &strings.Builder{}
-	rns := []byte(val)
-	for i := 0; i < len(rns); i++ {
-		builder.WriteString(fmt.Sprintf("%x", rns[i]))
-	}
-	return fmt.Sprintf("%02x%02x%s", idx, len(rns), builder)
+func encodeValue(idx int, val string) []byte {
+	buf := new(bytes.Buffer)
+	buf.WriteByte(byte(idx))      // write `Tag`
+	buf.WriteByte(byte(len(val))) // write `Length`
+	buf.Write([]byte(val))        // write `Value`
+
+	return buf.Bytes()
 }
 
 func formatTime(t time.Time) string {
