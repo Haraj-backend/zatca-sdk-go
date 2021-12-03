@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	input := qrcode.Data{
+	input := qrcode.QRCodeData{
 		SellerName:   "Bobs Records",
 		SellerTRN:    "310122393500003",
 		Timestamp:    time.Date(2022, 04, 25, 15, 30, 00, 00, time.UTC),
