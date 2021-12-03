@@ -28,12 +28,12 @@ import (
 
 func main() {
 	// encode data using TLV method to get code hash
-	hash, err := qrCode.EncodeTLV(qrcode.Data{
-		SellerName:   		"Bobs Records",
-		SellerTaxNumber:    "310122393500003",
-		Timestamp:    		time.Date(2022, 04, 25, 15, 30, 00, 00, time.UTC),
-		InvoiceTotal: 		1000,
-		TotalVAT:     		150,
+	hash, err := qrcode.EncodeTLV(qrcode.Data{
+		SellerName:      "Bobs Records",
+		SellerTaxNumber: "310122393500003",
+		Timestamp:       time.Date(2022, 04, 25, 15, 30, 00, 00, time.UTC),
+		InvoiceTotal:    1000,
+		TotalVAT:        150,
 	})
 	if err != nil {
 		log.Fatalf("unable to encode TLV due: %v", err)
@@ -41,7 +41,7 @@ func main() {
 	fmt.Println("hash data:", hash)
 
 	// decode hash using TLV method to get data
-	data, err := qrcode.DecodeTLV("AR3Yp9mE2KzZiNin2YfYsdmKINin2YTYudix2KjZigIPMzEwMTIyMzkzNTAwMDAzAxQyMDIyLTA0LTI1VDE1OjMwOjAwWgQHMTAwMC4wMAUGMTUwLjAw")
+	data, err := qrcode.DecodeTLV(hash)
 	if err != nil {
 		log.Fatalf("unable to decode TLV due: %v", err)
 	}
