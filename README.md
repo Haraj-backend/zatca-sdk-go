@@ -5,8 +5,6 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/Haraj-backend/zatca-sdk-go)](https://goreportcard.com/report/github.com/Haraj-backend/zatca-sdk-go)
 [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/user/project/master/LICENSE)
 
-# Zatca SDK GO
-
 An unofficial package in Golang to help developers to implement ZATCA (Fatoora) QR code easily which required for e-invoicing
 
 > ✅ The hash result has been validated the same as the output from ZATCA's SDK as of 18th November 2021
